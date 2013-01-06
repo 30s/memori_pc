@@ -42,9 +42,13 @@ class MemoriAPI(object):
     def __init__(self, token):
         self.token = token
 
-    def photos(self):
-        req = urllib2.Request(API_URL + '/v1/photo/?format=json')
+    def get_request(self, url):
+        req = urllib2.Request(API_URL + url)
         req.add_header('AUTHORIZATION', 'Bearer %s' % self.token)
+        return req
+
+    def photos(self):
+        req = self.get_request('/v1/photo/?format=json')
         try:
             resp = urllib2.urlopen(req)
             return json.loads(resp.read(), object_hook=_obj_hook)
@@ -55,5 +59,4 @@ class MemoriAPI(object):
 if __name__=='__main__':
     api = MemoriAPI('7b262d6bd5')
     photos = api.photos()
-    import pdb
-    pdb.set_trace()
+    print photos.meta.total_count
