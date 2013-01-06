@@ -42,13 +42,14 @@ class MemoriAPI(object):
     def __init__(self, token):
         self.token = token
 
-    def get_request(self, url):
+    def get_request(self, method, url):
         req = urllib2.Request(API_URL + url)
+        req.get_method = lambda : method
         req.add_header('AUTHORIZATION', 'Bearer %s' % self.token)
         return req
 
     def photos(self):
-        req = self.get_request('/v1/photo/?format=json')
+        req = self.get_request('GET', '/v1/photo/?format=json')
         try:
             resp = urllib2.urlopen(req)
             return json.loads(resp.read(), object_hook=_obj_hook)
