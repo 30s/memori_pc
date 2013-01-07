@@ -3,6 +3,7 @@ try:
 except ImportError:
     import simplejson as json
 
+import time
 import urllib2
 
 DEBUG = False
@@ -60,7 +61,7 @@ def _encode_multipart(**kw):
             if n != (-1):
                 ext = filename[n:].lower()
             content = v.read()
-            data.append('Content-Disposition: form-data; name="%s"; filename="hidden"' % k)
+            data.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (k, filename))
             data.append('Content-Length: %d' % len(content))
             data.append('Content-Type: %s\r\n' % _guess_content_type(ext))
             data.append(content)
@@ -83,16 +84,24 @@ def _encode_params(**kw):
 
 
 class APIRequest(object):
-    def __init__(self, method, url, token):
+    def __init__(self, method, url, token, data=None, files=None):
         self.req = urllib2.Request(API_URL + url)
         self.req.get_method = lambda : method
         self.req.add_header('AUTHORIZATION', 'Bearer %s' % token)
-        self.data = {}
-        self.files = {}
+        self.data = data
+        self.files = files
 
     def build_http_request(self):
+        if self.req.get_method() == 'GET':
+            pass
+        if self.req.get_method() == 'POST':
+            if len(self.files) > 0:
+                params, boundary = _encode_multipart(**self.files)
+                self.req.add_header('Content-Type', 'multipart/form-data; boundary=%s' % boundary)
+            else:
+                params = _encode_params(**self.data)
+            self.req.add_data(params)
         return self.req
-
 
 class MemoriAPI(object):
     def __init__(self, token):
@@ -103,14 +112,26 @@ class MemoriAPI(object):
         return json.loads(resp.read(), object_hook=_obj_hook)
             
     def photos(self):
-        req = APIRequest('GET', '/v1/photo/?format=json', self.token)
+        req = APIRequest('GET', '/v1/photo/', self.token)
         try:
             return self.execute(req)
         except urllib2.HTTPError, e:
             print e
+
+    def photo__upload(self, photo, shotted_at=None, location=None, voice=None,
+                      memori=None, local_key=None):
+        values = {'photo': open(photo)}
+        if shotted_at is not None:
+            values['shotted_at'] = shotted_at
+        req = APIRequest('POST', '/v1/photo/upload/', self.token, files=values)
+        try:
+            return self.execute(req)
+        except urllib2.HTTPError, e:
+            print e        
 
 
 if __name__=='__main__':
     api = MemoriAPI('7b262d6bd5')
     photos = api.photos()
     print photos.meta.total_count
+    print api.photo__upload('./upload.jpg', shotted_at='2012-08-09 14:50:37')
