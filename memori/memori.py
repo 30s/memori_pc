@@ -4,6 +4,7 @@ except ImportError:
     import simplejson as json
 
 import time
+import urllib
 import urllib2
 
 DEBUG = False
@@ -95,7 +96,7 @@ class APIRequest(object):
         if self.req.get_method() == 'GET':
             pass
         if self.req.get_method() == 'POST':
-            if len(self.files) > 0:
+            if self.files is not None:
                 params, boundary = _encode_multipart(**self.files)
                 self.req.add_header('Content-Type', 'multipart/form-data; boundary=%s' % boundary)
             else:
@@ -117,6 +118,21 @@ class MemoriAPI(object):
             f.write(e.read())
             f.close()
             print 'See ./error.html'
+
+    def account__register(self, email, pwd1, pwd2, client_id, email_name=None,
+                          avatar=None, weibo_uid=None):
+        values = {'email': email,
+                  'pwd1': pwd1,
+                  'pwd2': pwd2,
+                  'client_id': client_id}
+        if email_name is not None:
+            values['email_name'] = email_name
+        if avatar is not None:
+            values['avatar'] = avatar
+        if weibo_uid is not None:
+            values['weibo_uid'] = weibo_uid
+        req = APIRequest('POST', '/v1/account/register/', self.token, data=values)
+        return self.execute(req)
             
     def photos(self):
         req = APIRequest('GET', '/v1/photo/', self.token)
@@ -142,4 +158,5 @@ if __name__=='__main__':
     api = MemoriAPI('7b262d6bd5')
     # print api.photos()
     # api.photo__upload('./upload.jpg', shotted_at='2012-08-09 14:50:37')
-    print api.photo__add_comment('50ea35d6c3666e6b2800002b', './voice.3gp', emotion='1')
+    # print api.photo__add_comment('50ea35d6c3666e6b2800002b', './voice.3gp', emotion='1')
+    print api.account__register(' AbC@ab.com ', '123', '123', '500e29a921085c3e19000000')
