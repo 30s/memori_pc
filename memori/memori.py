@@ -14,7 +14,7 @@ if DEBUG:
     opener = urllib2.build_opener(httpHandler, httpsHandler)
     urllib2.install_opener(opener)
 
-API_URL = 'http://192.168.1.194'
+API_URL = 'http://192.168.1.194:8000'
 # API_URL = 'http://api.memori.cn'
 
 
@@ -39,7 +39,7 @@ def _obj_hook(pairs):
     return o
 
 
-_CONTENT_TYPES = { '.png': 'image/png', '.gif': 'image/gif', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.jpe': 'image/jpeg' }
+_CONTENT_TYPES = { '.png': 'image/png', '.gif': 'image/gif', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.jpe': 'image/jpeg', '.3gp': 'video/3gpp' }
 
 def _guess_content_type(ext):
     return _CONTENT_TYPES.get(ext, 'application/octet-stream')
@@ -103,20 +103,24 @@ class APIRequest(object):
             self.req.add_data(params)
         return self.req
 
+
 class MemoriAPI(object):
     def __init__(self, token):
         self.token = token
 
     def execute(self, request):
-        resp = urllib2.urlopen(request.build_http_request())
-        return json.loads(resp.read(), object_hook=_obj_hook)
+        try:
+            resp = urllib2.urlopen(request.build_http_request())
+            return json.loads(resp.read(), object_hook=_obj_hook)
+        except urllib2.HTTPError, e:
+            f = open('./error.html', 'w')
+            f.write(e.read())
+            f.close()
+            print 'See ./error.html'
             
     def photos(self):
         req = APIRequest('GET', '/v1/photo/', self.token)
-        try:
-            return self.execute(req)
-        except urllib2.HTTPError, e:
-            print e
+        return self.execute(req)
 
     def photo__upload(self, photo, shotted_at=None, location=None, voice=None,
                       memori=None, local_key=None):
@@ -124,14 +128,18 @@ class MemoriAPI(object):
         if shotted_at is not None:
             values['shotted_at'] = shotted_at
         req = APIRequest('POST', '/v1/photo/upload/', self.token, files=values)
-        try:
-            return self.execute(req)
-        except urllib2.HTTPError, e:
-            print e        
+        return self.execute(req)
+
+    def photo__add_comment(self, photo_id, voice, emotion=None):
+        values = {'voice': open(voice)}
+        if emotion is not None:
+            values['emotion'] = emotion
+        req = APIRequest('POST', '/v2/photo/%s/comment/' % photo_id, self.token, files=values)
+        return self.execute(req)
 
 
 if __name__=='__main__':
     api = MemoriAPI('7b262d6bd5')
-    photos = api.photos()
-    print photos.meta.total_count
-    print api.photo__upload('./upload.jpg', shotted_at='2012-08-09 14:50:37')
+    # print api.photos()
+    # api.photo__upload('./upload.jpg', shotted_at='2012-08-09 14:50:37')
+    print api.photo__add_comment('50ea35d6c3666e6b2800002b', './voice.3gp', emotion='1')
