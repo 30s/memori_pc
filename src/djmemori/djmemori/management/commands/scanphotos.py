@@ -1,9 +1,12 @@
 import os
 from datetime import datetime
+from dateutil import tz
 from django.core.management.base import BaseCommand
 from djmemori.models import ScanPath, Photo
 from djmemori.utils import get_exif, dms2dd
 
+
+LCL_TZ = tz.tzlocal()
 
 class Command(BaseCommand):
     help = "Scan photos from ScanPath, extract photos' exif info and save them in DB."
@@ -16,7 +19,9 @@ class Command(BaseCommand):
             return
 
         if exif.has_key('DateTimeOriginal'):
-            photo.date_taken = datetime.strptime(exif['DateTimeOriginal'], '%Y:%m:%d %H:%M:%S')
+            date_taken = datetime.strptime(exif['DateTimeOriginal'], '%Y:%m:%d %H:%M:%S')
+            date_taken.replace(tzinfo=LCL_TZ)
+            photo.date_taken = date_taken
         if exif.has_key('ExifImageWidth'):
             photo.width = int(exif['ExifImageWidth'])
         if exif.has_key('ExifImageHeight'):

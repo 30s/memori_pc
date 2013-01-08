@@ -14,3 +14,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
 )
+
+urlpatterns += patterns('djmemori.views',
+    url(r'^events/$', 'events')
+)
