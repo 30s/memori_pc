@@ -1,0 +1,4 @@
+*.pyc
+*~
+*.db3
+memori/error.html
