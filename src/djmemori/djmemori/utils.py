@@ -14,11 +14,11 @@ def get_exif(fn):
     return ret
 
 
-def dms2dd(gpsinfo)
-    lat = [float(x)/float(y) for x, y in gpsinfo['GPSInfo'][2]]
-    latref = gpsinfo['GPSInfo'][1]
-    lon = [float(x)/float(y) for x, y in gpsinfo['GPSInfo'][4]]
-    lonref = gpsinfo['GPSInfo'][3]
+def dms2dd(gpsinfo):
+    lat = [float(x)/float(y) for x, y in gpsinfo[2]]
+    latref = gpsinfo[1]
+    lon = [float(x)/float(y) for x, y in gpsinfo[4]]
+    lonref = gpsinfo[3]
 
     lat = lat[0] + lat[1]/60 + lat[2]/3600
     lon = lon[0] + lon[1]/60 + lon[2]/3600
