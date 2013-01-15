@@ -15,7 +15,7 @@ if DEBUG:
     opener = urllib2.build_opener(httpHandler, httpsHandler)
     urllib2.install_opener(opener)
 
-API_URL = 'http://192.168.1.194:8000'
+API_URL = 'http://192.168.1.194'
 # API_URL = 'http://api.memori.cn'
 
 
@@ -153,10 +153,35 @@ class MemoriAPI(object):
         req = APIRequest('POST', '/v2/photo/%s/comment/' % photo_id, self.token, files=values)
         return self.execute(req)
 
+    def photo__add_annotation(self, photo_id, voice):
+        values = {'photo': photo_id,
+                  'voice': open(voice)}
+        req = APIRequest('POST', '/v1/photo/add_annotation/', self.token, files=values)
+        return self.execute(req)        
+
+    def share__email(self, emails, title=None, event=None, photos=None, voice=None, email_name=None):
+        values = {'emails': emails}
+        if title is not None:
+            values['title'] = title
+        if event is not None:
+            values['event'] = event
+        if photos is not None:
+            values['photos'] = photos
+        if voice is not None:
+            values['voice'] = open(voice)
+        if email_name is not None:
+            values['email_name'] = email_name
+        req = APIRequest('POST', '/v1/share/email/', self.token, files=values)
+        return self.execute(req)            
+
 
 if __name__=='__main__':
     api = MemoriAPI('7b262d6bd5')
     # print api.photos()
     # api.photo__upload('./upload.jpg', shotted_at='2012-08-09 14:50:37')
     # print api.photo__add_comment('50ea35d6c3666e6b2800002b', './voice.3gp', emotion='1')
-    print api.account__register(' AbC@ab.com ', '123', '123', '500e29a921085c3e19000000')
+    # print api.account__register(' AbC@ab.com ', '123', '123', '500e29a921085c3e19000000')
+    pid = '50f507e5c3666e1c4f0000d0'
+    # print api.photo__add_annotation(pid, './voice.3gp')
+    print api.share__email('"" <ax003d@qq.com>', photos=pid)
+    
