@@ -15,9 +15,13 @@ if DEBUG:
     opener = urllib2.build_opener(httpHandler, httpsHandler)
     urllib2.install_opener(opener)
 
-API_URL = 'http://192.168.1.194'
-# API_URL = 'http://api.memori.cn'
+# API_URL = 'http://192.168.1.194'
+# TOKEN = '7b262d6bd5'
+# PID = '50f507e5c3666e1c4f0000d0'
 
+API_URL = 'http://api.memori.cn'
+TOKEN = '2e70773637'
+PID = '50f756d58ddf872648000068'
 
 class JsonObject(dict):
     '''
@@ -176,12 +180,11 @@ class MemoriAPI(object):
 
 
 if __name__=='__main__':
-    api = MemoriAPI('7b262d6bd5')
+    api = MemoriAPI(TOKEN)
     # print api.photos()
     # api.photo__upload('./upload.jpg', shotted_at='2012-08-09 14:50:37')
     # print api.photo__add_comment('50ea35d6c3666e6b2800002b', './voice.3gp', emotion='1')
     # print api.account__register(' AbC@ab.com ', '123', '123', '500e29a921085c3e19000000')
-    pid = '50f507e5c3666e1c4f0000d0'
     # print api.photo__add_annotation(pid, './voice.3gp')
-    print api.share__email('"" <ax003d@qq.com>', photos=pid)
+    print api.share__email('"ax003d" <ax003d@gmail.com>', photos=PID)
     
