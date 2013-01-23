@@ -27,18 +27,25 @@ class DlgLocalMemori(QDialog, Ui_DlgLocalMemori):
             item = QListWidgetItem(str(i[0].date_taken) + ' %d photos' % len(i))
             self.lst_memori.addItem(item)
         self.lst_memori.itemClicked.connect(self.on_lst_memori_item_clicked)
-        self.lst_photos.itemClicked.connect(self.on_lst_photos_item_clicked)
+        for i in range(10):
+            for j in range(10):
+                lbl = QLabel()
+                self.grid_photos.addWidget(lbl, i, j, 1, 1)
 
     def on_lst_memori_item_clicked(self, item):
-        self.lst_photos.clear()
+        for i in range(10):
+            for j in range(10):
+                self.grid_photos.itemAtPosition(i, j).widget().setPixmap(None)
+        idx = 0
         for i in self.events[self.lst_memori.indexFromItem(item).row()]:
+            if idx >= 100:
+                return
             photo = i.root.path + i.path
             thumb = get_square_thumb_80(i.root.path, i.path)
-            item  = QListWidgetItem(photo)
-            icon  = QIcon(thumb)
-            item.setIcon(icon)
-            self.lst_photos.addItem(item)
-
+            img = QPixmap(thumb)
+            lbl = self.grid_photos.itemAtPosition(idx / 10, idx % 10).widget()
+            lbl.setPixmap(img)
+            idx += 1
 
     def on_lst_photos_item_clicked(self, item):
         photo = self.events[self.lst_memori.currentRow()][self.lst_photos.indexFromItem(item).row()]
