@@ -20,7 +20,7 @@
       <widget class="QListWidget" name="lst_memori"/>
      </item>
      <item>
-      <widget class="QGraphicsView" name="gv_image"/>
+      <widget class="QListWidget" name="lst_photos"/>
      </item>
     </layout>
    </item>

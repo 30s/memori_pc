@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dlg_local_memori.ui'
 #
-# Created: Wed Jan 23 13:56:31 2013
+# Created: Wed Jan 23 14:46:10 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -20,9 +20,9 @@ class Ui_DlgLocalMemori(object):
         self.lst_memori = QtGui.QListWidget(DlgLocalMemori)
         self.lst_memori.setObjectName("lst_memori")
         self.horizontalLayout.addWidget(self.lst_memori)
-        self.gv_image = QtGui.QGraphicsView(DlgLocalMemori)
-        self.gv_image.setObjectName("gv_image")
-        self.horizontalLayout.addWidget(self.gv_image)
+        self.lst_photos = QtGui.QListWidget(DlgLocalMemori)
+        self.lst_photos.setObjectName("lst_photos")
+        self.horizontalLayout.addWidget(self.lst_photos)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.buttonBox = QtGui.QDialogButtonBox(DlgLocalMemori)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
