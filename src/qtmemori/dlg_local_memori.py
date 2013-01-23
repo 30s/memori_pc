@@ -15,6 +15,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "djmemori.settings")
 
 from djmemori.models import Photo
 from djmemori.views import event_generator
+from utils import get_square_thumb_80
 
 
 class DlgLocalMemori(QDialog, Ui_DlgLocalMemori):
@@ -31,13 +32,19 @@ class DlgLocalMemori(QDialog, Ui_DlgLocalMemori):
     def on_lst_memori_item_clicked(self, item):
         self.lst_photos.clear()
         for i in self.events[self.lst_memori.indexFromItem(item).row()]:
-            item = QListWidgetItem(i.root.path + i.path)
+            photo = i.root.path + i.path
+            thumb = get_square_thumb_80(i.root.path, i.path)
+            item  = QListWidgetItem(photo)
+            icon  = QIcon(thumb)
+            item.setIcon(icon)
             self.lst_photos.addItem(item)
+
 
     def on_lst_photos_item_clicked(self, item):
         photo = self.events[self.lst_memori.currentRow()][self.lst_photos.indexFromItem(item).row()]
         im = Image.open(photo.root.path + photo.path)
         im.show()
+
 
 if __name__=='__main__':
     import sys
