@@ -12,6 +12,7 @@ sys.path.append(DIR_NAME + '/../djmemori')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "djmemori.settings")
 
 from djmemori.models import ScanPath
+from djmemori.utils import save_photo
 
 
 class DlgScanPath(QDialog, Ui_DlgScanPath):
@@ -20,6 +21,27 @@ class DlgScanPath(QDialog, Ui_DlgScanPath):
         self.setupUi(self)
         self.btn_add.clicked.connect(self.on_btn_add_clicked)
         self.btn_delete.clicked.connect(self.on_btn_delete_clicked)
+        self.btn_scan.clicked.connect(self.on_btn_scan_clicked)
+        self.update_table()
+
+    def on_btn_scan_clicked(self):
+        items = self.tbl_scan_path.selectedItems()
+        for i in items[::2]:
+            path = ScanPath.objects.get(path=i.text())
+            for dirpath, dirnames, filenames in os.walk(path.path):
+                print "Scanning %s ..." % dirpath
+                sp, created = ScanPath.objects.get_or_create(path=dirpath)
+                has_photo = False
+                for f in filenames:
+                    if f.endswith('.jpg'):
+                        has_photo = True
+                        print "Save photo %s ..." % f
+                        try:
+                            save_photo(sp, f)
+                        except Exception, e:
+                            print str(e)
+                if not has_photo:
+                    sp.delete()
         self.update_table()
 
     def on_btn_add_clicked(self):
