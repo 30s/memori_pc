@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dlg_scan_path.ui'
 #
-# Created: Fri Jan 25 14:38:58 2013
+# Created: Fri Jan 25 17:57:07 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -18,6 +18,8 @@ class Ui_DlgScanPath(object):
         self.verticalLayout = QtGui.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
         self.tbl_scan_path = QtGui.QTableWidget(DlgScanPath)
+        self.tbl_scan_path.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
+        self.tbl_scan_path.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
         self.tbl_scan_path.setObjectName("tbl_scan_path")
         self.tbl_scan_path.setColumnCount(2)
         self.tbl_scan_path.setRowCount(0)

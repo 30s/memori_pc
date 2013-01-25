@@ -18,6 +18,12 @@
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QTableWidget" name="tbl_scan_path">
+       <property name="selectionMode">
+        <enum>QAbstractItemView::MultiSelection</enum>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
        <column>
         <property name="text">
          <string>Scan Path</string>
