@@ -17,6 +17,8 @@ from djmemori.models import Photo
 from djmemori.views import event_generator
 from utils import get_square_thumb_80
 
+from dlg_scan_path import DlgScanPath
+
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -31,6 +33,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             for j in range(10):
                 lbl = QLabel()
                 self.grid_photos.addWidget(lbl, i, j, 1, 1)
+        self.action_scan_path.triggered.connect(self.on_action_scan_path_triggered)
+
+
+    def on_action_scan_path_triggered(self):
+        dlg_scan_path = DlgScanPath(self)
+        dlg_scan_path.setModal(True)
+        dlg_scan_path.show()
 
     def on_lst_memori_item_clicked(self, item):
         for i in range(10):

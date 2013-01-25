@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_memori.ui'
 #
-# Created: Fri Jan 25 14:18:14 2013
+# Created: Fri Jan 25 14:34:04 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -57,6 +57,9 @@ class Ui_MainWindow(object):
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        self.action_scan_path = QtGui.QAction(MainWindow)
+        self.action_scan_path.setObjectName("action_scan_path")
+        self.menu_settings.addAction(self.action_scan_path)
         self.menubar.addAction(self.menu_settings.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -66,4 +69,5 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "MainWindow", None, QtGui.QApplication.UnicodeUTF8))
         self.btn_export.setText(QtGui.QApplication.translate("MainWindow", "Export", None, QtGui.QApplication.UnicodeUTF8))
         self.menu_settings.setTitle(QtGui.QApplication.translate("MainWindow", "Settings", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_scan_path.setText(QtGui.QApplication.translate("MainWindow", "ScanPath", None, QtGui.QApplication.UnicodeUTF8))
 
