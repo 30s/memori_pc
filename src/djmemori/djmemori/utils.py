@@ -41,7 +41,7 @@ def dms2dd(gpsinfo):
 
 def save_photo(root, path):
     exif  = get_exif(os.path.join(root.path, path))
-    photo = Photo(root=root, path=path)
+    photo, created = Photo.objects.get_or_create(root=root, path=path)
     if exif is None:
         p.save()
         return
