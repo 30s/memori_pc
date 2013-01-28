@@ -12,7 +12,7 @@ def get_square_thumb_80(root, path):
     if os.path.exists(filename):
         return filename
 
-    im = Image.open(root + path)
+    im = Image.open(os.path.join(root, path))
     size = im.size
     thumb = None
     if size[0] > size[1]:

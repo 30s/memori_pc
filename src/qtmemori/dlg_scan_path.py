@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 
@@ -13,6 +14,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "djmemori.settings")
 
 from djmemori.models import ScanPath
 from djmemori.utils import save_photo
+from utils import get_square_thumb_80
 
 
 class DlgScanPath(QDialog, Ui_DlgScanPath):
@@ -37,9 +39,10 @@ class DlgScanPath(QDialog, Ui_DlgScanPath):
                         has_photo = True
                         print "Save photo %s ..." % f
                         try:
+                            get_square_thumb_80(sp.path, f)
                             save_photo(sp, f)
                         except Exception, e:
-                            print str(e)
+                            logging.exception(e)
                 if not has_photo:
                     sp.delete()
         self.update_table()
